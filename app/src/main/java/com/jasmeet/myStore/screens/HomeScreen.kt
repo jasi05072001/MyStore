@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -53,6 +55,7 @@ import com.jasmeet.myStore.R
 import com.jasmeet.myStore.appComponents.ItemLayout
 import com.jasmeet.myStore.ui.theme.robotoCondensedLight
 import com.jasmeet.myStore.ui.theme.robotoRegular
+import com.jasmeet.myStore.viewModel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +71,17 @@ fun HomeScreen() {
         mutableStateOf(0)
 
     }
+    val context = LocalContext.current
+
+    val productViewModel: HomeViewModel = HomeViewModel()
+
+    var categories  = productViewModel.parseJson(context)
+
+
+    LaunchedEffect(Unit) {
+        categories = listOf(productViewModel.loadProductData(context = context))
+    }
+    
 
 
     Scaffold(
@@ -134,7 +148,8 @@ fun HomeScreen() {
                     ) {
                         Icon(
                             Icons.Outlined.ShoppingCart,
-                            contentDescription = "Favorite"
+                            contentDescription = "Favorite",
+                            tint = Color.Black
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
@@ -150,10 +165,9 @@ fun HomeScreen() {
                 .fillMaxSize()
                 .padding(top = paddingValues.calculateTopPadding())
         ) {
-            items(1) {
+            item() {
 
                 Column {
-
                     Row(
                         Modifier
                             .padding(
@@ -167,7 +181,7 @@ fun HomeScreen() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "header",
+                            text ="" ,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black,
                             fontFamily = robotoRegular,
