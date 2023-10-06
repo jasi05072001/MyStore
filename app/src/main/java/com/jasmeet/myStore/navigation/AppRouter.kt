@@ -9,9 +9,11 @@ import androidx.compose.runtime.mutableStateOf
 
 sealed class Screens{
 
-    object SplashScreen :Screens()
-    object HomeScreen :Screens()
-    object FavouritesScreen :Screens()
+    data object SplashScreen :Screens()
+    data object HomeScreen :Screens()
+    data object FavouritesScreen :Screens()
+
+    data object CartScreen :Screens()
 
 }
 

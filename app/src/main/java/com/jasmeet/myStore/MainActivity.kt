@@ -14,11 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.jasmeet.myStore.navigation.AppRouter
 import com.jasmeet.myStore.navigation.Screens
+import com.jasmeet.myStore.screens.CartScreen
 import com.jasmeet.myStore.screens.FavouritesScreen
 import com.jasmeet.myStore.screens.HomeScreen
 import com.jasmeet.myStore.screens.SplashScreen
 import com.jasmeet.myStore.ui.theme.MyStoreTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +58,7 @@ fun MainApp() {
             val isSplashScreenVisible = currentScreen.value is Screens.SplashScreen
             val isHomeScreenVisible = currentScreen.value is Screens.HomeScreen
             val isFavouritesScreen = currentScreen.value is Screens.FavouritesScreen
+            val isCartScreen = currentScreen.value is Screens.CartScreen
 
             AnimatedVisibility(
                 visible = isSplashScreenVisible,
@@ -78,6 +82,15 @@ fun MainApp() {
             ) {
                 FavouritesScreen()
             }
+            AnimatedVisibility(
+                visible = isCartScreen,
+                enter = fadeIn() ,
+                exit = fadeOut()
+            ) {
+                CartScreen()
+            }
+
+
         }
 
     }

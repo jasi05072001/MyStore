@@ -2,7 +2,7 @@
 
 package com.jasmeet.myStore.screens
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -48,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +57,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -67,17 +70,27 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jasmeet.myStore.R
 import com.jasmeet.myStore.appComponents.ItemLayout
 import com.jasmeet.myStore.data.Category
+import com.jasmeet.myStore.db.data.CartItem
+import com.jasmeet.myStore.db.data.Item
+import com.jasmeet.myStore.navigation.AppRouter
+import com.jasmeet.myStore.navigation.Screens
 import com.jasmeet.myStore.ui.theme.robotoCondensedLight
+import com.jasmeet.myStore.ui.theme.robotoRegular
 import com.jasmeet.myStore.utils.parseJsonFromAssets
+import com.jasmeet.myStore.viewModel.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val context = LocalContext.current
+
+    val homeViewModel :HomeViewModel = hiltViewModel()
+    val cartItemCount by homeViewModel.cartItems.collectAsState(initial = emptyList())
 
     val listState = rememberLazyListState()
 
@@ -94,6 +107,9 @@ fun HomeScreen() {
     val isExpanded = rememberSaveable {
         mutableStateOf(true)
     }
+
+    val dialogList = listOf("Daily needs","Electronics","Fashion","Stationary")
+    val deviceWidth = LocalConfiguration.current.screenWidthDp.dp
 
     Scaffold(
         modifier = Modifier
@@ -135,7 +151,9 @@ fun HomeScreen() {
                 ),
                 actions = {
                     IconButton(
-                        onClick = { /*TODO*/ }
+                        onClick = {
+                            AppRouter.navigateTo(Screens.FavouritesScreen)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.FavoriteBorder,
@@ -144,22 +162,24 @@ fun HomeScreen() {
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
-                    BadgedBox(modifier = Modifier.padding(end = 10.dp),
+                    BadgedBox(
+                        modifier = Modifier.padding(end = 10.dp),
                         badge = {
                             Badge(
                                 containerColor = Color.Black,
                                 contentColor = Color.White
                             ) {
-                                Text(text = "0")
-
-
+                                Text(text = "${cartItemCount.size}")
                             }
                         }
                     ) {
                         Icon(
                             Icons.Outlined.ShoppingCart,
                             contentDescription = "Favorite",
-                            tint = Color.Black
+                            tint = Color.Black,
+                            modifier = Modifier.clickable {
+                                AppRouter.navigateTo(Screens.CartScreen)
+                            }
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
@@ -178,8 +198,40 @@ fun HomeScreen() {
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.SpaceEvenly){
 
-                    if (!isExpanded.value) {
-                        Card(modifier = Modifier.padding(bottom = 15.dp).size(150.dp).background(Color.Black)) {
+                    AnimatedVisibility (
+                        visible = !isExpanded.value,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically()
+                    ) {
+
+                        Card(
+                            modifier = Modifier
+
+                                .padding(bottom = 15.dp)
+                                .width(deviceWidth * 0.8f)
+                                .wrapContentHeight()
+                                .shadow(5.dp, RoundedCornerShape(10.dp), spotColor = Color.Black),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(0xffececec)
+                            )
+                        ) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .wrapContentHeight()
+                                    .padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                items(dialogList){
+                                    Text(
+                                        text = it,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = robotoRegular,
+                                        modifier = Modifier.padding(10.dp)
+
+                                    )
+                                }
+                            }
                         }
                     }
                     ExtendedFloatingActionButton(
@@ -246,13 +298,19 @@ fun CategoryList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryItem(category: Category) {
+fun CategoryItem(
+    category: Category,
+
+    ) {
+
+    val context = LocalContext.current
     val height = LocalConfiguration.current.screenHeightDp.dp/3.4f
     val isExpandedClicked = rememberSaveable {
         mutableStateOf(true)
     }
     val icon = if (isExpandedClicked.value) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp
     val iconBackGround = if (isExpandedClicked.value) Color(0xffF5F5F5) else Color(0xffE2E5DE)
+    val  homeViewModel :HomeViewModel = hiltViewModel()
 
     Column(modifier = Modifier.padding(16.dp)) {
         Row(
@@ -295,14 +353,8 @@ fun CategoryItem(category: Category) {
             modifier = Modifier.padding(vertical = 10.dp)
         ) {
             Column {
-
-
                 Divider(color = Color(0xff808080), thickness = 1.dp)
-
                 Spacer(modifier = Modifier.height(15.dp))
-
-
-
                 LazyRow(
                     modifier = Modifier
                         .height(height),
@@ -312,12 +364,26 @@ fun CategoryItem(category: Category) {
                         ItemLayout(
                             item = item,
                             onFavoritesClick = {
-                                Log.d("TAGEr", "CategoryItem: ${item.name}")
+                                val items = Item(
+                                    name = item.name,
+                                    price = item.price,
+                                    icon = item.icon,
+                                )
+                                homeViewModel.addItem(items)
+                                Toast.makeText(context, "Item added to favourites", Toast.LENGTH_SHORT).show()
+
                             },
                             onQuantityClick = {
-                                Log.d("TAGEr", "CategoryItem: ${item.price}")
-                            }
-                        )
+                                val items = CartItem(
+                                    name = item.name,
+                                    price = item.price,
+                                    icon = item.icon,
+                                    quantity = 1
+                                )
+                                homeViewModel.insertCartItem(items)
+                            },
+
+                            )
                     }
                 }
             }
