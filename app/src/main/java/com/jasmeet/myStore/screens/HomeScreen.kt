@@ -18,11 +18,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -31,8 +35,11 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -41,6 +48,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -69,8 +79,20 @@ fun HomeScreen() {
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val context = LocalContext.current
 
+    val listState = rememberLazyListState()
+
+    val isVisible  by remember {
+        derivedStateOf {
+            !listState.isScrollInProgress
+        }
+    }
+
     val categories  = remember {
         parseJsonFromAssets(context)
+    }
+
+    val isExpanded = rememberSaveable {
+        mutableStateOf(true)
     }
 
     Scaffold(
@@ -143,26 +165,79 @@ fun HomeScreen() {
                     Spacer(modifier = Modifier.width(10.dp))
                 }
             )
-        }
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ){
+                Column (horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.SpaceEvenly){
+
+                    if (!isExpanded.value) {
+                        Card(modifier = Modifier.padding(bottom = 15.dp).size(150.dp).background(Color.Black)) {
+                        }
+                    }
+                    ExtendedFloatingActionButton(
+                        containerColor = if (isExpanded.value) Color(0xff19191a) else Color(0xffff844c),
+                        contentColor = Color.White,
+                        shape =  if (isExpanded.value) RoundedCornerShape(18.dp) else  CircleShape,
+                        text = {
+                            Text(
+                                text = "Categories",
+                                fontFamily = robotoCondensedLight,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 15.sp
+                            )
+                        },
+                        icon = {
+                            Icon(
+                                painter =
+                                if (isExpanded.value) painterResource(id = R.drawable.categories) else painterResource(
+                                    id = R.drawable.baseline_close_24
+                                ),
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            isExpanded.value = !isExpanded.value
+                        },
+                        expanded = isExpanded.value,
+                        modifier = Modifier
+                    )
+                }
+
+            }
+
+        },
+        floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
         CategoryList(
             categories = categories,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            listState = listState
         )
-    }
 
+    }
 
 }
 
 @Composable
 fun CategoryList(
     categories: List<Category>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    listState: LazyListState
 ) {
-    LazyColumn(modifier = Modifier
-        .padding(paddingValues)
-        .height(LocalConfiguration.current.screenHeightDp.dp)
-        .background(Color(0xFFF5F5F5))) {
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .padding(paddingValues)
+            .height(LocalConfiguration.current.screenHeightDp.dp)
+            .background(Color(0xFFF5F5F5))) {
         items(categories){
             CategoryItem(category = it)
         }
@@ -172,7 +247,7 @@ fun CategoryList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryItem(category: Category) {
-    val height = LocalConfiguration.current.screenHeightDp.dp/3.45f
+    val height = LocalConfiguration.current.screenHeightDp.dp/3.4f
     val isExpandedClicked = rememberSaveable {
         mutableStateOf(true)
     }

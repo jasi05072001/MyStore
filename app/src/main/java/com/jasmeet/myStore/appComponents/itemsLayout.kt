@@ -83,7 +83,7 @@ fun ItemLayout(
 
     Card(
         modifier = Modifier
-            .height(deviceHeight * 0.3f)
+            .height(deviceHeight * 0.26f)
             .width(deviceWidth * 0.4f)
             .shadow(5.dp, RoundedCornerShape(10.dp), ambientColor = Color.Black),
         colors = CardDefaults.cardColors(
