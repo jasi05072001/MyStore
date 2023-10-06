@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -28,6 +27,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -68,10 +68,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    //lottie compose
+    //lottie-compose
     implementation("com.airbnb.android:lottie-compose:6.0.0")
 
-    //constraint layout
+    //constraint-layout
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     //coil
@@ -80,6 +80,5 @@ dependencies {
     //google-gson
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
 }

@@ -30,26 +30,24 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.jasmeet.myStore.data.Item
 import com.jasmeet.myStore.ui.theme.robotoCondensedLight
 import com.jasmeet.myStore.ui.theme.robotoRegular
 
 @ExperimentalMaterial3Api
 @Composable
 fun ItemLayout(
-    title: String,
-    price: String,
-    imageUrl: String,
-    onQuantityClick: () -> Unit,
-    onFavoritesClick : () -> Unit,
-    iQuantityMeasurable : Boolean = false
+    item: Item,
+    iQuantityMeasurable: Boolean = false,
+    onFavoritesClick: () -> Unit = {},
+    onQuantityClick: () -> Unit = {}
 ) {
+
     val deviceHeight = LocalConfiguration.current.screenHeightDp.dp
     val deviceWidth = LocalConfiguration.current.screenWidthDp.dp
 
@@ -66,7 +64,7 @@ fun ItemLayout(
                 fontFamily = robotoRegular,
             )
         ){
-            append("₹$price")
+            append("₹${item.price}")
         }
         if (iQuantityMeasurable) {
             withStyle(
@@ -85,7 +83,7 @@ fun ItemLayout(
 
     Card(
         modifier = Modifier
-            .height(deviceHeight * 0.28f)
+            .height(deviceHeight * 0.3f)
             .width(deviceWidth * 0.4f)
             .shadow(5.dp, RoundedCornerShape(10.dp), ambientColor = Color.Black),
         colors = CardDefaults.cardColors(
@@ -124,7 +122,7 @@ fun ItemLayout(
 
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
+                    .data(item.icon)
                     .crossfade(true)
                     .build(),
                 contentDescription = "Item Image",
@@ -140,67 +138,57 @@ fun ItemLayout(
             )
 
             Text(
-                text = title,
-                fontWeight = FontWeight.Normal,
+                text = item.name,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.Black,
                 fontFamily = robotoRegular,
                 modifier = Modifier
-                    .padding(top = 20.dp)
+                    .padding(top = 20.dp, start = 15.dp, end = 8.dp)
                     .constrainAs(titleText) {
                         top.linkTo(image.bottom)
-                        start.linkTo(image.start)
+                        start.linkTo(parent.start)
+
 
                     },
-                fontSize = 18.sp
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+
             )
             Text(
                 text = priceAnnotatedString,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Bold,
                 color = Color.Black,
                 fontFamily = robotoRegular,
                 modifier = Modifier
-                    .padding(top = 2.dp)
+                    .padding(top = 5.dp,start = 15.dp, end = 8.dp)
                     .constrainAs(priceText) {
                         top.linkTo(titleText.bottom)
-                        start.linkTo(image.start)
+                        start.linkTo(parent.start)
                     },
-                fontSize = 18.sp
+                fontSize = 18.sp,
             )
             Icon(
                 imageVector = Icons.Outlined.Add,
                 contentDescription = "Add",
                 tint = Color.White,
                 modifier = Modifier
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp, top = 5.dp)
                     .background(Color(0xffff844c), shape = RoundedCornerShape(7.dp))
                     .constrainAs(quantityIcon) {
                         top.linkTo(titleText.bottom)
                         end.linkTo(parent.end)
                     }
-                    .padding(2.dp)
+                    .padding(3.dp)
                     .clickable {
-                         onQuantityClick()
+                        onQuantityClick()
                     }
 
             )
+
         }
 
 
     }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(device = Devices.PIXEL_4_XL)
-@Composable
-fun ItemLayoutPreview() {
-    ItemLayout(
-        title = "Carrot",
-        price = "50",
-        imageUrl = "https://cdn-icons-png.flaticon.com/128/2405/2405479.png",
-        onQuantityClick = {},
-        onFavoritesClick = {},
-        iQuantityMeasurable = true
-    )
 
 }

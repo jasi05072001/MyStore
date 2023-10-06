@@ -1,7 +1,5 @@
 {
-  "status": true,
-  "message": "Product Categories",
-  "error": null,
+
   "categories": [
     {
       "id": 55,

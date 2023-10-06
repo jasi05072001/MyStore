@@ -16,7 +16,6 @@ import com.jasmeet.myStore.navigation.AppRouter
 import com.jasmeet.myStore.navigation.Screens
 import com.jasmeet.myStore.screens.FavouritesScreen
 import com.jasmeet.myStore.screens.HomeScreen
-import com.jasmeet.myStore.screens.MainScreen
 import com.jasmeet.myStore.screens.SplashScreen
 import com.jasmeet.myStore.ui.theme.MyStoreTheme
 
@@ -60,9 +59,7 @@ fun MainApp() {
             AnimatedVisibility(
                 visible = isSplashScreenVisible,
                 enter = fadeIn() ,
-//                        + slideInHorizontally(initialOffsetX = { -it }),
                 exit = fadeOut()
-//                        + slideOutHorizontally(targetOffsetX = { it })
             ) {
                 SplashScreen()
             }
@@ -70,24 +67,17 @@ fun MainApp() {
             AnimatedVisibility(
                 visible = isHomeScreenVisible,
                 enter = fadeIn() ,
-//                        + slideInHorizontally(initialOffsetX = { -it }),
                 exit = fadeOut()
-//                        + slideOutHorizontally(targetOffsetX = { it })
             ) {
-//                HomeScreen()
-                MainScreen()
+                HomeScreen()
             }
             AnimatedVisibility(
                 visible = isFavouritesScreen,
                 enter = fadeIn() ,
-//                        + slideInHorizontally(initialOffsetX = { -it }),
                 exit = fadeOut()
-//                        + slideOutHorizontally(targetOffsetX = { it })
             ) {
                 FavouritesScreen()
             }
-
-
         }
 
     }
