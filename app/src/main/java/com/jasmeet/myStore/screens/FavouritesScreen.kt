@@ -190,6 +190,7 @@ fun FavouritesItem(items: Item, homeViewModel: HomeViewModel) {
             ) {
                 Text(
                     text = items.name,
+                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -199,14 +200,16 @@ fun FavouritesItem(items: Item, homeViewModel: HomeViewModel) {
                         text = "Quantity: ${items.quantity}",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
-                        fontFamily = robotoRegular
+                        fontFamily = robotoRegular,
+                                color = Color.Black
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
                         text = "₹${items.price}",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
-                        fontFamily = robotoRegular
+                        fontFamily = robotoRegular,
+                        color = Color.Black
                     )
                 }
 

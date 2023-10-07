@@ -235,14 +235,16 @@ private fun PriceSection(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                     Text(
                         text = "₹$formattedPrice",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                 }
 
@@ -259,14 +261,16 @@ private fun PriceSection(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                     Text(
                         text = "₹${discountString}",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -285,14 +289,16 @@ private fun PriceSection(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                     Text(
                         text = "₹${totalString}",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         fontFamily = robotoRegular,
-                        modifier = Modifier.padding(horizontal = 15.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        color = Color.Black
                     )
                 }
             }
@@ -323,7 +329,8 @@ private fun PriceSection(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = robotoRegular,
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(5.dp),
+                color = Color.Black
 
             )
         }
@@ -363,6 +370,7 @@ fun CartItem(items: CartItem, homeViewModel: HomeViewModel) {
             ) {
                 Text(
                     text = trimmedString,
+                    color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -370,7 +378,8 @@ fun CartItem(items: CartItem, homeViewModel: HomeViewModel) {
                     text = "₹${items.price}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    fontFamily = robotoRegular
+                    fontFamily = robotoRegular,
+                    color = Color.Black
                 )
 
 
@@ -409,7 +418,13 @@ fun CartItem(items: CartItem, homeViewModel: HomeViewModel) {
 
                     )
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = "${items.quantity}", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, fontFamily = robotoRegular)
+                    Text(
+                        text = "${items.quantity}",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = robotoRegular,
+                        color = Color.Black
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         imageVector = Icons.Outlined.Add,
@@ -427,7 +442,13 @@ fun CartItem(items: CartItem, homeViewModel: HomeViewModel) {
 
                     )
                 }
-                Text(text = "₹${formattedPrice}", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, fontFamily = robotoRegular)
+                Text(
+                    text = "₹${formattedPrice}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = robotoRegular,
+                    color = Color.Black
+                )
 
                 //a text to show the total price of all the items
 
