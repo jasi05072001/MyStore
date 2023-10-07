@@ -163,7 +163,11 @@ fun HomeScreen() {
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     BadgedBox(
-                        modifier = Modifier.padding(end = 10.dp),
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                            .clickable {
+                                AppRouter.navigateTo(Screens.CartScreen)
+                            },
                         badge = {
                             Badge(
                                 containerColor = Color.Black,
@@ -177,9 +181,7 @@ fun HomeScreen() {
                             Icons.Outlined.ShoppingCart,
                             contentDescription = "Favorite",
                             tint = Color.Black,
-                            modifier = Modifier.clickable {
-                                AppRouter.navigateTo(Screens.CartScreen)
-                            }
+
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
@@ -275,6 +277,7 @@ fun HomeScreen() {
         )
 
     }
+
 
 }
 

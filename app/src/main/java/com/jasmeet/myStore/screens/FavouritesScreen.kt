@@ -40,8 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,13 +69,13 @@ fun FavouritesScreen() {
             CenterAlignedTopAppBar(
                 modifier = Modifier.background(Color(0xffececec)),
                 title = {
-                Text(
-                    text = "Favourite",
-                    fontFamily = robotoRegular,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                )
-            },
+                    Text(
+                        text = "Favourite",
+                        fontFamily = robotoRegular,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xffececec)
                 ),
@@ -224,16 +222,16 @@ fun FavouritesItem(items: Item, homeViewModel: HomeViewModel) {
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = null,
-                        tint = Color.Red,
-                        modifier = Modifier
-                            .clickable {
-                                homeViewModel.deleteItem(items)
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    tint = Color.Red,
+                    modifier = Modifier
+                        .clickable {
+                            homeViewModel.deleteItem(items)
 
-                            }
-                    )
+                        }
+                )
 
                 Icon(
                     imageVector = Icons.Outlined.Add,
