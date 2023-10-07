@@ -229,6 +229,7 @@ fun HomeScreen() {
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = robotoRegular,
+                                        color = Color.Black,
                                         modifier = Modifier.padding(10.dp)
 
                                     )
