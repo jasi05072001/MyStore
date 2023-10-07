@@ -330,7 +330,6 @@ private fun PriceSection(
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = robotoRegular,
                 modifier = Modifier.padding(5.dp),
-                color = Color.Black
 
             )
         }
